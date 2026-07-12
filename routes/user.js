@@ -1,31 +1,32 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/user.js");
 const passport = require("passport");
-const { saveRedirectUrl } = require("../middleware.js");
-const wrapasync = require("../utils/WrapAsync.js");
 
+const User = require("../models/user.js");
+const { saveRedirectUrl } = require("../middleware.js");
+const WrapAsync = require("../utils/WrapAsync.js");
 const usersController = require("../controllers/users.js");
 
-//render signup form
-router.route("/signup")
-.get(usersController.renderSignupForm)
-.post(WrapAsync(usersController.signup));
+// Render signup form
+router
+  .route("/signup")
+  .get(usersController.renderSignupForm)
+  .post(WrapAsync(usersController.signup));
 
+// Render login form
+router
+  .route("/login")
+  .get(usersController.renderLoginForm)
+  .post(
+    saveRedirectUrl,
+    passport.authenticate("local", {
+      failureFlash: true,
+      failureRedirect: "/login",
+    }),
+    usersController.login
+  );
 
-//render login form and login post requests
-router.route("/login")
-.get( usersController.renderLoginForm)
-.post(
-  saveRedirectUrl,
-  passport.authenticate("local", {
-    failureFlash: true,
-    failureRedirect: "/login",
-  }),
-     usersController.login
-);
-
+// Logout
 router.get("/logout", usersController.logout);
 
 module.exports = router;
-
