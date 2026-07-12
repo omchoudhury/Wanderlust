@@ -1,5 +1,5 @@
 const User = require("../models/user.js");
-const  wrapasync = require("../utils/wrapasync.js");
+const  wrapasync = require("../utils/WrapAsync.js");
 const passport = require("passport");
 
 
